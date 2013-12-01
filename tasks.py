@@ -4,6 +4,7 @@ import os, sys
 
 from invoke import Collection, task, run as _run
 from detie.utils import logger
+import requests
 
 try:
     import private_keys as pk
@@ -53,4 +54,7 @@ def sync_data():
 
 @task(pre=['update_repo', 'sync_data'])
 def deploy():
-    pass
+    logging.info("Trigger building")
+    r = requests.get(pk.BUILD_TRIGGER_URL)
+    if r.status_code != 200:
+        logging.error('Trigger building failed')
