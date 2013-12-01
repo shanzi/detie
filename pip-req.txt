@@ -1,3 +1,4 @@
 invoke==0.6.1
 lxml==3.2.4
+marisa-trie==0.5.1
 wsgiref==0.1.2
