@@ -2,8 +2,9 @@
 # encoding: utf-8
 import os, sys
 
-from invoke import Collection, task, run as _run
-from detie.utils import logger
+from invoke import Collection, task, ctask, run as _run
+import detie
+from detie import logger
 import requests
 
 try:
@@ -58,3 +59,7 @@ def deploy():
     r = requests.get(pk.BUILD_TRIGGER_URL)
     if r.status_code < 200 or r.status_code >= 300:
         logger.error('Trigger building failed')
+
+@ctask(default=True)
+def build(ctx):
+    detie.run()

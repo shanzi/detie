@@ -10,6 +10,9 @@ class BaseData(object):
 
     def __init__(self, filename):
         self._filename = filename
+
+    def __iter__(self):
+        return self.texts
         
     @property
     def absolute_file_path(self):
@@ -31,6 +34,9 @@ class BaseData(object):
 
 class NLPIRXMLData(BaseData):
     """Class to handle NLPIR data in xml format"""
+
+    def __iter__(self):
+        return self.records
 
     def _records(self):
         itertree = etree.iterparse(self.absolute_file_path)
@@ -67,5 +73,5 @@ class DictData(BaseData):
         with open(self.absolute_file_path) as f:
             while True:
                 line = f.readline()
-                if line: yield line
+                if line: yield line.decode('gbk')
                 else: break
