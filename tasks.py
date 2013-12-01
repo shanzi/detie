@@ -56,5 +56,5 @@ def sync_data():
 def deploy():
     logger.info("Trigger building")
     r = requests.get(pk.BUILD_TRIGGER_URL)
-    if r.status_code != 200:
+    if r.status_code < 200 or r.status_code >= 300:
         logger.error('Trigger building failed')
