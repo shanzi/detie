@@ -13,8 +13,7 @@ class BaseData(object):
         
     @property
     def absolute_file_path(self):
-        file_dir = os.path.dirname(__file__)
-        return os.path.abspath(os.path.join(file_dir, DATA_DIR, self._filename))
+        return os.path.join(DATA_DIR, self._filename)
 
     @property
     def records(self):

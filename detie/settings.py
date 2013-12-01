@@ -1,1 +1,3 @@
-DATA_DIR="../data/"
+import os
+
+DATA_DIR = os.environ['DATA_DIR']
