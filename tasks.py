@@ -54,7 +54,7 @@ def sync_data():
 
 @task(pre=['update_repo', 'sync_data'])
 def deploy():
-    logging.info("Trigger building")
+    logger.info("Trigger building")
     r = requests.get(pk.BUILD_TRIGGER_URL)
     if r.status_code != 200:
-        logging.error('Trigger building failed')
+        logger.error('Trigger building failed')
