@@ -63,3 +63,10 @@ class NLPIRXMLData(BaseData):
                 yield elem.text
 
 
+class DictData(BaseData):
+    def _texts(self):
+        with open(self.absolute_file_path) as f:
+            while True:
+                line = f.readline()
+                if line: yield line
+                else: break
