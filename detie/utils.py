@@ -1,71 +1,30 @@
-#!/usr/bin/env python
-# encoding: utf-8
-
-from detie.settings import DATA_DIR
-import os
-from lxml import etree 
-
-class BaseData(object):
-    """A base data class to define a protocol for iterate all the data records/entries"""
-
-    def __init__(self, filename):
-        self._filename = filename
-        
-    @property
-    def absolute_file_path(self):
-        return os.path.join(DATA_DIR, self._filename)
-
-    @property
-    def records(self):
-        return self._records()
-
-    @property
-    def texts(self):
-        return self._texts()
-
-    def _records(self):
-        raise NotImplementedError()
-
-    def _texts(self):
-        raise NotImplementedError()
-
-class NLPIRXMLData(BaseData):
-    """Class to handle NLPIR data in xml format"""
-
-    def _records(self):
-        itertree = etree.iterparse(self.absolute_file_path)
-        latest_id = ''
-        latest_article = ''
-        latest_time = ''
-        for event, elem in itertree:
-            if event != 'end': continue
-
-            if elem.tag == 'id':
-                latest_id = elem.text
-            elif elem.tag == 'article':
-                latest_article = elem.text
-            elif elem.tag == 'time':
-                latest_time = elem.text
-            if elem.tag == 'RECORD':
-                record = {
-                        'id':latest_id,
-                        'texts':latest_article,
-                        'datetime':latest_time}
-                yield record
-
-    def _texts(self):
-        itertree = etree.iterparse(self.absolute_file_path)
-        for event, elem in itertree:
-            if event != 'end': continue
-            
-            if elem.tag == 'article':
-                yield elem.text
+import logging
 
 
-class DictData(BaseData):
-    def _texts(self):
-        with open(self.absolute_file_path) as f:
-            while True:
-                line = f.readline()
-                if line: yield line
-                else: break
+class ColorLoggingFormatter(logging.Formatter):
+    def format(self, record):
+        level = record.levelno
+        if level == logging.DEBUG:
+            fmt = '\x1b[36;1m%s\x1b[0m'
+        elif level == logging.INFO:
+            fmt = '\x1b[34;1m%s\x1b[0m'
+        elif level == logging.WARNING:
+            fmt = '\x1b[33;1m%s\x1b[0m'
+        elif level == logging.ERROR:
+            fmt = '\x1b[31;1m%s\x1b[0m'
+        elif level == logging.CRITICAL:
+            fmt = '\x1b[37;41;1m%s\x1b[0m'
+        else:
+            fmt = '\x1b[39;2m%s:\x1b[0m'
+
+        level_fmt = fmt % record.levelname
+        record.levelname = level_fmt
+        return logging.Formatter.format(self, record)
+
+logging_handler = logging.StreamHandler()
+logging_handler.setLevel(logging.INFO)
+logging_handler.setFormatter(ColorLoggingFormatter('%(levelname)s: %(message)s'))
+
+logger = logging.getLogger('detie')
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging_handler)
