@@ -35,3 +35,6 @@ nosetests.xml
 .project
 .pydevproject
 data/*
+
+private_keys.py
+rsync.pwd
