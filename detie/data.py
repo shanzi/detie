@@ -78,3 +78,12 @@ class DictData(BaseData):
                     if len(l)==1: continue
                     else: yield l
                 else: break
+
+class SetData(BaseData):
+    def __init__(self, *args, **kwargs):
+        BaseData.__init__(self, *args, **kwargs)
+        with open(self.absolute_file_path) as f:
+            self._chars =set([c.strip().decode('utf8') for c in f.read().split('\n')])
+
+    def __contains__(self, char):
+        return char in self._chars

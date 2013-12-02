@@ -3,15 +3,24 @@
 
 import re
 
+from detie.data import SetData 
+
 RE_MENTION = re.compile(ur"@\S+")
 RE_CN = re.compile(ur"[^\u4E00-\u9FA5]+")
+
+IGNORE_SINGLE_CHARS = SetData('ignore_single_chars.txt')
 
 def divide(text):
     text = RE_MENTION.sub(u'', text)
     return RE_CN.split(text)
 
+def preaccept(char):
+    if len(char)>1: 
+        return True
+    return False
+
 def get_new_string(trie, text):
-    if len(text) == 1:return None
+    if len(text) <= 1:return None
     new_string_list = []
     newstr = ''
     for i in range(len(text)):
@@ -24,8 +33,14 @@ def get_new_string(trie, text):
                     if list_: new_string_list+=list_
             break
         else:
-            newstr += text[i]
-    if newstr and len(newstr)>1:
+            char = subtext[0]
+            if char in IGNORE_SINGLE_CHARS:
+                list_ = get_new_string(trie, subtext[1:])
+                if list_: new_string_list+=list_
+                break
+            else:
+                newstr += subtext[0]
+    if newstr and preaccept(newstr):
         return [newstr,] + new_string_list
     else:
         return new_string_list
