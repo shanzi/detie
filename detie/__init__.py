@@ -25,7 +25,7 @@ def count_new_strings():
     corpus = load_corpus()
     counter = Counter()
     i=0
-    sum_ = float(21E4)
+    sum_ = float(29E4)
     for text in corpus.texts:
         if not text: continue
         new_strings = extract_new_string(trie, text)
