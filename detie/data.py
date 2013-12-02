@@ -73,5 +73,6 @@ class DictData(BaseData):
         with open(self.absolute_file_path) as f:
             while True:
                 line = f.readline()
-                if line: yield line.decode('gbk')
+                if line:
+                    yield line.decode('gbk').strip()
                 else: break
