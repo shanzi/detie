@@ -39,6 +39,6 @@ def count_new_strings():
 
 def run():
     counter = count_new_strings()
-    for word, count in counter.most_common(50):
+    for word, count in counter.most_common(1000):
         l = u"%s (%d)" % (word, count)
         print l.encode('utf8')
