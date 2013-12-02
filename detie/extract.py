@@ -11,7 +11,7 @@ def divide(text):
     return RE_CN.split(text)
 
 def get_new_string(trie, text):
-    if len(text) == 1:return [text,]
+    if len(text) == 1:return None
     new_string_list = []
     newstr = ''
     for i in range(len(text)):
@@ -25,7 +25,7 @@ def get_new_string(trie, text):
             break
         else:
             newstr += text[i]
-    if newstr:
+    if newstr and len(newstr)>1:
         return [newstr,] + new_string_list
     else:
         return new_string_list
