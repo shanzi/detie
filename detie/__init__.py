@@ -40,4 +40,4 @@ def count_new_strings():
 def run():
     counter = count_new_strings()
     for word, count in counter.most_common(50):
-        print "%s (%d)" % (word, count)
+        print u"%s (%d)" % (word, count)
