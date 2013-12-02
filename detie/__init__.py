@@ -25,7 +25,7 @@ def count_new_strings():
     corpus = load_corpus()
     counter = Counter()
     i=0
-    sum_ = float(29E4)
+    sum_ = float(23E4)
     for text in corpus.texts:
         if not text: continue
         new_strings = extract_new_string(trie, text)
@@ -40,4 +40,5 @@ def count_new_strings():
 def run():
     counter = count_new_strings()
     for word, count in counter.most_common(50):
-        print u"%s (%d)" % (word, count)
+        l = u"%s (%d)" % (word, count)
+        print l.encode('utf8')
