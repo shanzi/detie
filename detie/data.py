@@ -74,5 +74,7 @@ class DictData(BaseData):
             while True:
                 line = f.readline()
                 if line:
-                    yield line.decode('gbk').strip()
+                    l = line.decode('gbk').strip()
+                    if len(l)==1: continue
+                    else: yield l
                 else: break

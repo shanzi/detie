@@ -24,11 +24,17 @@ def count_new_strings():
     trie = build_trie()
     corpus = load_corpus()
     counter = Counter()
+    i=0
+    sum_ = float(21E4)
     for text in corpus.texts:
         if not text: continue
         new_strings = extract_new_string(trie, text)
         for str_ in new_strings:
             counter[str_] += 1
+        i+=1
+        if i%1000==0:
+            logger.info("Computing: %.2f%% - [%d]" % (i/sum_*100, len(counter)))
+    logger.info("Computing finished")
     return counter
 
 def run():
