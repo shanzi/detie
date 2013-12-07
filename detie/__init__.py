@@ -5,6 +5,7 @@ from marisa_trie import Trie
 from detie.utils import logger
 from detie.data import DictData, NLPIRXMLData 
 from detie.extract import extract_new_string
+from detie.prob import word_prob
 
 
 def build_trie():
@@ -40,5 +41,5 @@ def count_new_strings():
 def run():
     counter = count_new_strings()
     for word, count in counter.most_common(1000):
-        l = u"%s (%d)" % (word, count)
+        l = u"%s [%f] (%d)" % (word, word_prob(word), count)
         print l.encode('utf8')
