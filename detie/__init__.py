@@ -32,7 +32,9 @@ def count_new_strings():
         if not text: continue
         new_strings = extract_new_string(trie, text)
         for str_ in new_strings:
-            counter[str_] += 1
+            a,b,c,d = word_prob(str_)
+            if a>=4.5 and c>=33:
+                counter[str_] += 1
         i+=1
         if i%1000==0:
             logger.info("Computing: %.2f%% - [%d]" % (i/sum_*100, len(counter)))
