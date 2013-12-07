@@ -17,7 +17,9 @@ def divide(text):
     return RE_CN.split(text)
 
 def preaccept(text):
-    if len(text)>1: 
+    if len(text)>5:
+        return False
+    elif len(text)>1: 
         if RE_NUM.match(text[:-1]):
             return False
         return True

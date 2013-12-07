@@ -68,7 +68,6 @@ class NLPIRXMLData(BaseData):
             if elem.tag == 'article':
                 yield elem.text
 
-
 class DictData(BaseData):
     def _texts(self):
         with open(self.absolute_file_path) as f:
