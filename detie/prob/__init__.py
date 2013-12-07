@@ -15,8 +15,8 @@ _prob_start = start.get('B')
 def word_prob(text):
     len_ = len(text)
     if len_ <= 1: return MIN_FLOAT
-    prob_b = emit.get(text[0], MIN_FLOAT)
-    prob_e = emit.get(text[-1], MIN_FLOAT)
+    prob_b = emit['B'].get(text[0], MIN_FLOAT)
+    prob_e = emit['E'].get(text[-1], MIN_FLOAT)
     if len_ == 2:
         return _prob_start + prob_b + prob_e + _prob_trans_BE
     else:
