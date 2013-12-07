@@ -40,6 +40,8 @@ def count_new_strings():
 
 def run():
     counter = count_new_strings()
-    for word, count in counter.most_common(1000):
-        l = u"%s [%f] (%d)" % (word, word_prob(word), count)
-        print l.encode('utf8')
+    for word, count in counter.most_common(5000):
+        wp = word_prob(word)
+        if wp < -13.5:
+            l = u"%s [%f] (%d)" % (word, wp, count)
+            print l.encode('utf8')
