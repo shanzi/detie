@@ -6,15 +6,15 @@ import re
 from detie.data import SetData 
 
 RE_MENTION = re.compile(ur"@\S+")
-RE_CN = re.compile(ur"[^\u4E00-\u9FA5]+")
+RE_NON_CN = re.compile(ur"[^\u4E00-\u9FA5]+")
 RE_NUM = re.compile(
 ur"[\u591a\u4e24\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07\u4ebf\u51e0]+")
 
 IGNORE_SINGLE_CHARS = SetData('ignore_single_chars.txt')
 
 def divide(text):
-    text = RE_MENTION.sub(u'', text)
-    return RE_CN.split(text)
+    text = RE_MENTION.sub(u' ', text)
+    return RE_NON_CN.split(text)
 
 def preaccept(text):
     if len(text)>5:
