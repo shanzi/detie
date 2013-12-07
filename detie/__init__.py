@@ -57,5 +57,5 @@ def run():
     counter = count_new_strings()
     for word, count in counter.most_common(1000):
         wp = word_prob(word)
-        l = u"%s [%f] (%d)" % (word, wp, count)
+        l = u"%s [%s] (%d)" % (word, wp, count)
         print l.encode('utf8')
