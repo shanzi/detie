@@ -69,12 +69,18 @@ class NLPIRXMLData(BaseData):
                 yield elem.text
 
 class DictData(BaseData):
+    def _decode(self, text):
+        try:
+            return text.decode(self._encoding)
+        except Exception, e:
+            return ''
+
     def _texts(self):
         with open(self.absolute_file_path) as f:
             while True:
                 line = f.readline()
                 if line:
-                    l = line.decode(self._encoding).strip()
+                    l = self._decode(line).strip()
                     if len(l)==1: continue
                     else: yield l
                 else: break
