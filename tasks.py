@@ -60,6 +60,11 @@ def deploy():
     if r.status_code < 200 or r.status_code >= 300:
         logger.error('Trigger building failed')
 
+@task
+def score():
+    detie.score()
+    
+
 @ctask(default=True)
 def build(ctx):
     detie.run()

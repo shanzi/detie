@@ -8,8 +8,9 @@ from lxml import etree
 class BaseData(object):
     """A base data class to define a protocol for iterate all the data records/entries"""
 
-    def __init__(self, filename):
+    def __init__(self, filename, encoding='GBK'):
         self._filename = filename
+        self._encoding = encoding
 
     def __iter__(self):
         return self.texts
@@ -74,7 +75,7 @@ class DictData(BaseData):
             while True:
                 line = f.readline()
                 if line:
-                    l = line.decode('gbk').strip()
+                    l = line.decode(self._encoding).strip()
                     if len(l)==1: continue
                     else: yield l
                 else: break

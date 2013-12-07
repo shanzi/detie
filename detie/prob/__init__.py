@@ -12,4 +12,4 @@ def word_prob(text):
     if len_ <= 1: return emit['S'].get(text, MIN_FLOAT)
     prob_b = emit['B'].get(text[0], MIN_FLOAT)
     prob_e = emit['E'].get(text[-1], MIN_FLOAT)
-    return prob_b + prob_e 
+    return (-max(prob_b, prob_e), -min(prob_b, prob_e), prob_e*prob_b, abs(prob_b-prob_e))
