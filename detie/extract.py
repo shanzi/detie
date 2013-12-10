@@ -37,9 +37,10 @@ def get_new_string(trie, text):
         prefixes = trie.prefixes(subtext)
         if prefixes:
             for prefix in prefixes:
-                if len(prefix)<len(subtext):
-                    list_ = get_new_string(trie, subtext[len(prefix):])
-                    if list_: new_string_list+=list_
+                list_ = get_new_string(trie, subtext[len(prefix):])
+                if list_: new_string_list+=list_
+                if len(newstr) in [1,2] and len(prefix)==2:
+                    new_string_list.append(newstr+prefix)
             break
         else:
             newstr += subtext[0]
