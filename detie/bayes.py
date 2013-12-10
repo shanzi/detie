@@ -10,7 +10,7 @@ def train(spam_words, unlabeled_words):
     spams = list(map(features, spam_words))
     unlabeled = list(map(features, unlabeled_words))
 
-    model = PositiveNaiveBayesClassifier.train(spams, unlabeled, 0.95)
+    model = PositiveNaiveBayesClassifier.train(spams, unlabeled, 0.5)
     data = PickleData('bayesmodel.pickle')
     data.write(model)
     return model
@@ -25,6 +25,7 @@ def predictor():
         model = train(spam.texts, unlabel.texts)
 
     def classify(word):
-        return model.classify(features(word))
+        pb = model.prob_classify(features(word))
+        return pb.prob(1) > 0.9
 
     return classify
