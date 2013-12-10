@@ -1,5 +1,4 @@
 PyYAML==3.10
-getch==1.0
 invoke==0.6.1
 lxml==3.2.4
 marisa-trie==0.5.1
