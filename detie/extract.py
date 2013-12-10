@@ -11,9 +11,12 @@ RE_NUM = re.compile(
 ur"[\u591a\u4e24\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07\u4ebf\u51e0]+")
 
 IGNORE_SINGLE_CHARS = SetData('ignore_single_chars.txt')
+RE_SINGLE_CHAR = re.compile(IGNORE_SINGLE_CHARS.to_regexp())
+
 
 def divide(text):
     text = RE_MENTION.sub(u' ', text)
+    text = RE_SINGLE_CHAR.sub(u' ', text)
     return RE_NON_CN.split(text)
 
 def preaccept(text):
@@ -40,12 +43,6 @@ def get_new_string(trie, text):
             break
         else:
             char = subtext[0]
-            if char in IGNORE_SINGLE_CHARS:
-                list_ = get_new_string(trie, subtext[1:])
-                if list_: new_string_list+=list_
-                break
-            else:
-                newstr += subtext[0]
     if newstr and preaccept(newstr):
         return [newstr,] + new_string_list
     else:

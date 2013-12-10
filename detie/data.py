@@ -93,3 +93,6 @@ class SetData(BaseData):
 
     def __contains__(self, char):
         return char in self._chars
+
+    def to_regexp(self):
+        return ur"[%s]" % (u''.join(self._chars))
