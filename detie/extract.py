@@ -39,7 +39,7 @@ def get_new_string(trie, text):
             for prefix in prefixes:
                 list_ = get_new_string(trie, subtext[len(prefix):])
                 if list_: new_string_list+=list_
-                if len(newstr) in [2, 3, 4] and len(prefix)==2:
+                if len(newstr) in [1, 2, 3, 4] and len(prefix)==2:
                     new_string_list.append(newstr+prefix)
             break
         else:

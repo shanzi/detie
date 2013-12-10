@@ -3,6 +3,7 @@
 
 from detie.settings import DATA_DIR
 import os
+import cPickle
 from lxml import etree 
 
 class BaseData(object):
@@ -18,6 +19,10 @@ class BaseData(object):
     @property
     def absolute_file_path(self):
         return os.path.join(DATA_DIR, self._filename)
+
+    @property
+    def exists(self):
+        return os.path.isfile(self.absolute_file_path)
 
     @property
     def records(self):
@@ -85,6 +90,11 @@ class DictData(BaseData):
                     else: yield l
                 else: break
 
+    def write(self, list_):
+        str_ = u'\n'.join(list_)
+        with open(self.absolute_file_path, 'w') as f:
+            f.write(str_.encode('utf8'))
+
 class SetData(BaseData):
     def __init__(self, *args, **kwargs):
         BaseData.__init__(self, *args, **kwargs)
@@ -96,3 +106,12 @@ class SetData(BaseData):
 
     def to_regexp(self):
         return ur"[%s]" % (u''.join(self._chars))
+
+class PickleData(BaseData):
+    def read(self):
+        with open(self.absolute_file_path) as f:
+            return cPickle.load(f)
+
+    def write(self, obj):
+        with open(self.absolute_file_path, 'wb') as f:
+            return cPickle.dump(obj, f)

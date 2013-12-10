@@ -65,6 +65,10 @@ def score():
     detie.score()
     
 
-@ctask(default=True)
-def build(ctx):
+@task
+def train_bayes(interactive=False):
+    detie.train_bayes(interactive)
+
+@task(default=True)
+def build():
     detie.run()

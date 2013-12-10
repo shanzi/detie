@@ -6,6 +6,7 @@ from detie.utils import logger
 from detie.data import DictData, NLPIRXMLData 
 from detie.extract import extract_new_string
 from detie.prob import word_prob
+from detie.bayes import train, predictor
 
 
 def build_trie():
@@ -55,7 +56,31 @@ def score():
 
 def run():
     counter = count_new_strings()
+    p = predictor()
     for word, count in counter.most_common(1000):
-        wp = word_prob(word)
-        l = u"%s [%s] (%d)" % (word, wp, count)
+        if p(word):
+            l = u"%-10s [%s] (%d)" % (word, count)
+        else:
+            l = u"%10s [%s] (%d)" % (word, count)
         print l.encode('utf8')
+
+def train_bayes(interactive):
+    if interactive:
+        counter = count_new_strings()
+        import getch
+        spams = []
+        unlabeled = []
+        for word, count in counter.most_common(500):
+            print u"%s (%d)" % (word, count),
+            char = getch.getch()
+            if char == ' ':
+                unlabeled.append(word)
+                print '-'
+            else:
+                spams.append(word)
+                print '+'
+        DictData('rank.txt').write(spams + ['----'] + unlabeled)
+        train(spams, unlabeled)
+    else:
+        predictor()
+        
