@@ -57,7 +57,7 @@ def score():
 def run():
     counter = count_new_strings()
     p = predictor()
-    for word, count in counter.most_common(1000):
+    for word, count in counter.most_common(2000):
         if p(word):
             l = u"%-10s (%d)" % (word, count)
         else:
