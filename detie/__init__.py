@@ -59,9 +59,9 @@ def run():
     p = predictor()
     for word, count in counter.most_common(1000):
         if p(word):
-            l = u"%-10s [%s] (%d)" % (word, count)
+            l = u"%-10s (%d)" % (word, count)
         else:
-            l = u"%10s [%s] (%d)" % (word, count)
+            l = u"%10s (%d)" % (word, count)
         print l.encode('utf8')
 
 def train_bayes(interactive):
