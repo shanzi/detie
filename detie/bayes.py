@@ -6,8 +6,6 @@ def features(words):
     return {char: True for char in words}
 
 def train(spam_words, unlabeled_words):
-    DictData('spams.txt').write(spam_words)
-    DictData('unlabeled.txt').write(unlabeled_words)
 
     spams = list(map(features, spam_words))
     unlabeled = list(map(features, unlabeled_words))
@@ -22,8 +20,8 @@ def predictor():
     if data.exists:
         model = data.read()
     else:
-        spam = DictData('spams.txt')
-        unlabel = DictData('unlabeled.txt')
+        spam = DictData('spams.txt', encoding='utf8')
+        unlabel = DictData('unlabeled.txt', encoding='utf8')
         model = train(spam.texts, unlabel.texts)
 
     def classify(word):

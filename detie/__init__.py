@@ -80,6 +80,8 @@ def train_bayes(interactive):
                 spams.append(word)
                 print '+'
         DictData('rank.txt').write(spams + ['----'] + unlabeled)
+        DictData('spams.txt').write(spam_words)
+        DictData('unlabeled.txt').write(unlabeled_words)
         train(spams, unlabeled)
     else:
         predictor()
