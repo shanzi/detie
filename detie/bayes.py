@@ -26,6 +26,6 @@ def predictor():
 
     def classify(word):
         pb = model.prob_classify(features(word))
-        return pb.prob(1) > 0.9
+        return pb.prob(1) > 0.95
 
     return classify
