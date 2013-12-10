@@ -42,7 +42,7 @@ def get_new_string(trie, text):
                     if list_: new_string_list+=list_
             break
         else:
-            char = subtext[0]
+            newstr += subtext[0]
     if newstr and preaccept(newstr):
         return [newstr,] + new_string_list
     else:
