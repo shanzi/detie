@@ -6,7 +6,7 @@ from detie.utils import logger
 from detie.data import DictData, NLPIRXMLData 
 from detie.extract import extract_new_string
 from detie.prob import word_prob
-from detie.bayes import retrain as retrain_bayes
+from detie.bayes import predictor, retrain as retrain_bayes
 
 
 def build_trie():
