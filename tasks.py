@@ -66,8 +66,8 @@ def score():
     
 
 @task
-def train_bayes(interactive=False):
-    detie.train_bayes(interactive)
+def train_bayes(force=False):
+    detie.train_bayes(force)
 
 @task(default=True)
 def build():
