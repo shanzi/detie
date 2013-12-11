@@ -40,24 +40,13 @@ def count_new_strings():
     logger.info("Computing finished")
     return counter
 
-def score():
-    data = DictData('rank.txt', 'utf8')
-    for text in data.texts:
-        a,b,c,d = word_prob(text)
-        if (a>=4.5 and c>=33):
-            l = u"%-20s %3.5f %3.5f %3.5f %3.5f" % (text,a,b,c,d)
-            print l.encode('utf8')
-        else:
-            l = u"%20s %3.5f %3.5f %3.5f %3.5f" % (text,a,b,c,d)
-            print l.encode('utf8')
-
-
 def run():
     counter = count_new_strings()
     p = predictor()
-    for word, count in counter.most_common(2000):
+    limit = 2000
+    for word, count in counter.most_common():
         if p(word):
-            l = u"%-10s (%d)" % (word, count)
-        else:
             l = u"%10s (%d)" % (word, count)
-        print l.encode('utf8')
+            print l.encode('utf8')
+            limit -= 1
+            if limit <= 0: return
