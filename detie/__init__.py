@@ -66,8 +66,8 @@ def run():
 
 def train_bayes(force):
     if force:
-        spams = DictData('spams.txt')
-        unlabeled = DictData('unlabeled.txt')
+        spam = DictData('spams.txt', encoding='utf8')
+        unlabel = DictData('unlabeled.txt', encoding='utf8')
         train(spams.texts, unlabeled.texts)
     else:
         predictor()
