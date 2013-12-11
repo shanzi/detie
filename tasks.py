@@ -53,21 +53,19 @@ def sync_data():
     if not result.ok:
         logger.error('Failed to sync data files')
 
-@task(pre=['update_repo', 'sync_data'])
+
+@task
+def retrain_bayes():
+    logger.info("Training Bayes")
+    detie.retrain_bayes()
+
+@task(pre=['update_repo', 'retrain_bayes', 'sync_data'])
 def deploy():
     logger.info("Trigger building")
     r = requests.get(pk.BUILD_TRIGGER_URL)
     if r.status_code < 200 or r.status_code >= 300:
         logger.error('Trigger building failed')
 
-@task
-def score():
-    detie.score()
-    
-
-@task
-def train_bayes(force=False):
-    detie.train_bayes(force)
 
 @task(default=True)
 def build():

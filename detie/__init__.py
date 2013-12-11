@@ -6,7 +6,7 @@ from detie.utils import logger
 from detie.data import DictData, NLPIRXMLData 
 from detie.extract import extract_new_string
 from detie.prob import word_prob
-from detie.bayes import train, predictor
+from detie.bayes import retrain as retrain_bayes
 
 
 def build_trie():
@@ -33,9 +33,7 @@ def count_new_strings():
         if not text: continue
         new_strings = extract_new_string(trie, text)
         for str_ in new_strings:
-            a,b,c,d = word_prob(str_)
-            if a>=4.5 and c>=33:
-                counter[str_] += 1
+            counter[str_] += 1
         i+=1
         if i%1000==0:
             logger.info("Computing: %.2f%% - [%d]" % (i/sum_*100, len(counter)))
@@ -63,12 +61,3 @@ def run():
         else:
             l = u"%10s (%d)" % (word, count)
         print l.encode('utf8')
-
-def train_bayes(force):
-    if force:
-        spam = DictData('spams.txt', encoding='utf8')
-        unlabel = DictData('unlabeled.txt', encoding='utf8')
-        train(spams.texts, unlabeled.texts)
-    else:
-        predictor()
-        

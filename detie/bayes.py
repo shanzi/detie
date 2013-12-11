@@ -20,12 +20,16 @@ def predictor():
     if data.exists:
         model = data.read()
     else:
-        spam = DictData('spams.txt', encoding='utf8')
-        unlabel = DictData('unlabeled.txt', encoding='utf8')
-        model = train(spam.texts, unlabel.texts)
+        model = retrain()
 
     def classify(word):
         pb = model.prob_classify(features(word))
         return pb.prob(1) > 0.95
 
     return classify
+
+
+def retrain():
+    spams = DictData('spams.txt', encoding='utf8')
+    unlabeled = DictData('unlabeled.txt', encoding='utf8')
+    return train(spams.texts, unlabeled.texts)
