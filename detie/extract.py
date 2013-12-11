@@ -20,9 +20,9 @@ def divide(text):
     return RE_NON_CN.split(text)
 
 def fullcut(text):
-    if not text: return []
     list_ = []
     len_ = len(text)
+    if not text or len_<2: return list_
     if len_<=5:
         list_.append(text)
     else:
