@@ -31,11 +31,11 @@ def preaccept(text):
 def fullcut(text):
     list_ = []
     len_ = len(text)
-    for j in [2, 3, 4]:
-        if len_>j:
+    if len_<=4: list_.append(text)
+    else:
+        for j in [2, 3, 4]:
             for i in range(len_-j+1):
                 list_.append(text[i:i+j])
-    if len_<=4: list_.append(text)
     return list_
 
 def get_new_string(trie, text):
