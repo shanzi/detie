@@ -45,7 +45,7 @@ def run():
     p = predictor()
     limit = 2000
     for word, count in counter.most_common():
-        if p(word):
+        if not p(word):
             l = u"%10s (%d)" % (word, count)
             print l.encode('utf8')
             limit -= 1
