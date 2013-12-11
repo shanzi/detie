@@ -19,19 +19,12 @@ def divide(text):
     text = RE_SINGLE_CHAR.sub(u' ', text)
     return RE_NON_CN.split(text)
 
-def preaccept(text):
-    if len(text)>5:
-        return False
-    elif len(text)>1: 
-        if RE_NUM.match(text[:-1]):
-            return False
-        return True
-    return False
-
 def fullcut(text):
+    if not text: return []
     list_ = []
     len_ = len(text)
-    if len_<=4: list_.append(text)
+    if len_<=5:
+        list_.append(text)
     else:
         for j in [2, 3, 4]:
             for i in range(len_-j+1):
@@ -54,10 +47,7 @@ def get_new_string(trie, text):
             break
         else:
             newstr += subtext[0]
-    if newstr and preaccept(newstr):
-        return fullcut(newstr) + new_string_list
-    else:
-        return new_string_list
+    return fullcut(newstr) + new_string_list
 
 def extract_new_string(trie, text):
     texts = divide(text)
