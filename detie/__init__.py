@@ -21,8 +21,8 @@ def build_trie():
 
 def load_corpus():
     logger.info("Loading corpus data")
-    corpus_data = NLPIRXMLData("NLPIR_weibo_content_corpus.xml", encoding='gbk') 
-    #corpus_data = DictData('COAE2014_task3', encoding='gbk')
+    #corpus_data = NLPIRXMLData("NLPIR_weibo_content_corpus.xml", encoding='gbk') 
+    corpus_data = DictData('COAE2014_task3', encoding='gbk')
     logger.info("Corpus data loaded")
     return corpus_data
 
@@ -43,7 +43,8 @@ def count_new_strings():
     logger.info('Create pool of %d processes' % cpu_count)
     i=0
     sum_ = float(9990)
-    for group in corpus.block_groups(cpu_count, 1000):
+    groups = corpus.block_groups(cpu_count)
+    for group in groups:
         new_string_groups = pool.map(extract_process, group)
         for new_strings in new_string_groups:
             for str_ in new_strings:

@@ -5,6 +5,7 @@ from detie.settings import DATA_DIR
 import os
 import cPickle
 from lxml import etree 
+from itertools import islice
 
 class BaseData(object):
     """A base data class to define a protocol for iterate all the data records/entries"""
@@ -33,18 +34,16 @@ class BaseData(object):
         return self._texts()
 
     def block_groups(self, count, line_count=1000):
-        groups = []
         texts = self.texts
         while True:
+            groups = []
             for i in range(count):
-                lines = [l for n,l in enumerate(texts) if n<1000]
+                lines = [l for l in islice(texts, line_count)]
                 if lines:
                     groups.append(lines)
-                elif groups:
-                    yield groups
-                else:
-                    return
-            yield groups
+            if groups:
+                yield groups
+            else: return
 
     def _records(self):
         raise NotImplementedError()
