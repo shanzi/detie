@@ -8,6 +8,9 @@ from detie.extract import extract_new_string
 from detie.prob import word_prob
 from detie.bayes import predictor, retrain as retrain_bayes
 
+import multiprocessing
+
+_global = {}
 
 def build_trie():
     logger.info("Building trie tree")
@@ -23,20 +26,30 @@ def load_corpus():
     logger.info("Corpus data loaded")
     return corpus_data
 
+def extract_process(texts):
+    list_ = []
+    trie = _global['trie']
+    for text in texts:
+        if not text: continue
+        list_ += extract_new_string(trie, text)
+    return list_
+
 def count_new_strings():
-    trie = build_trie()
+    _global['trie'] = build_trie()
     corpus = load_corpus()
     counter = Counter()
+    cpu_count = multiprocessing.cpu_count()
+    pool = multiprocessing.Pool(processes=cpu_count)
+    logger.info('Create pool of %d processes' % cpu_count)
     i=0
-    sum_ = float(9990000)
-    for text in corpus.texts:
-        if not text: continue
-        new_strings = extract_new_string(trie, text)
-        for str_ in new_strings:
-            counter[str_] += 1
-        i+=1
-        if i%1000==0:
-            logger.info("Computing: %.2f%% - [%d]" % (i/sum_*100, len(counter)))
+    sum_ = float(9990)
+    for group in corpus.block_groups(cpu_count, 1000):
+        new_string_groups = pool.map(extract_process, group)
+        for new_strings in new_string_groups:
+            for str_ in new_strings:
+                counter[str_] += 1
+        i+=cpu_count
+        logger.info("Computing: %.2f%% - [%d]" % (i/sum_*100, len(counter)))
     logger.info("Computing finished")
     return counter
 
