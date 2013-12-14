@@ -45,11 +45,11 @@ def count_new_strings():
     logger.info('Create pool of %d processes' % cpu_count)
     i=0
     sum_ = float(9999000)/COUNT_STEP
-    groups = corpus.block_groups(cpu_count)
+    groups = corpus.block_groups(cpu_count, COUNT_STEP)
     for group in groups:
         if len(group)!=cpu_count:
             print '!'
-        new_string_groups = pool.map(extract_process, group, COUNT_STEP)
+        new_string_groups = pool.map(extract_process, group)
         for new_strings in new_string_groups:
             for str_ in new_strings:
                 counter[str_] += 1
