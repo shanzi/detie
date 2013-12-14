@@ -55,8 +55,6 @@ def extract_new_string(trie, text):
     texts = divide(text)
     list_ = []
     for text in texts:
-        if len(text)>40: print '!',
-        elif len(text)>20: print '.',
         new_str_list = get_new_string(trie, text)
         if new_str_list: list_+=new_str_list
     return list_
