@@ -33,28 +33,18 @@ class BaseData(object):
         return self._texts()
 
     def block_groups(self, count, line_count=1000):
-        group = []
-        blocks = self._blocks(line_count)
-        while True:
-            for i in range(count):
-                try:
-                    group.append(blocks.next())
-                except StopIteration:
-                    if group: yield group
-                    return
-            yield blocks
-            
-    def _blocks(self, line_count):
+        groups = []
         texts = self.texts
         while True:
-            block = []
-            for i in xrange(line_count):
-                try:
-                    block.append(texts.next())
-                except StopIteration:
-                    if block: yield block
+            for i in range(count):
+                lines = [l for n,l in enumerate(texts) if n<1000]
+                if lines:
+                    groups.append(lines)
+                elif groups:
+                    yield groups
+                else:
                     return
-            yield block
+            yield groups
 
     def _records(self):
         raise NotImplementedError()
