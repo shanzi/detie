@@ -47,6 +47,8 @@ def count_new_strings():
     sum_ = float(9999000)/COUNT_STEP
     groups = corpus.block_groups(cpu_count)
     for group in groups:
+        if len(group)!=cpu_count:
+            print '!'
         new_string_groups = pool.map(extract_process, group, COUNT_STEP)
         for new_strings in new_string_groups:
             for str_ in new_strings:

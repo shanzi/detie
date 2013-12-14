@@ -28,7 +28,7 @@ def fullcut(text):
     if len_<=5:
         list_.append(text)
     else:
-        for j in [2, 3, 4]:
+        for j in [3, 4]:
             for i in range(len_-j+1):
                 list_.append(text[i:i+j])
     return list_
