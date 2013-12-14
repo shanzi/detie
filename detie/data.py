@@ -9,7 +9,7 @@ from lxml import etree
 class BaseData(object):
     """A base data class to define a protocol for iterate all the data records/entries"""
 
-    def __init__(self, filename, encoding='GBK'):
+    def __init__(self, filename, encoding='utf8'):
         self._filename = filename
         self._encoding = encoding
 

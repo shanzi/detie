@@ -18,8 +18,8 @@ def build_trie():
 
 def load_corpus():
     logger.info("Loading corpus data")
-    #corpus_data = NLPIRXMLData("NLPIR_weibo_content_corpus.xml") 
-    corpus_data = DictData('COAE2014_task3')
+    #corpus_data = NLPIRXMLData("NLPIR_weibo_content_corpus.xml", encoding='gbk') 
+    corpus_data = DictData('COAE2014_task3', encoding='gbk')
     logger.info("Corpus data loaded")
     return corpus_data
 
