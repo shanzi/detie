@@ -3,7 +3,7 @@ from collections import Counter
 from marisa_trie import Trie
 
 from detie.utils import logger
-from detie.data import DictData, NLPIRXMLData 
+from detie.data import DictData, NLPIRXMLData, IdData
 from detie.extract import extract_new_string
 from detie.prob import word_prob
 from detie.bayes import predictor, retrain as retrain_bayes
@@ -59,12 +59,14 @@ def count_new_strings():
     return counter
 
 def run():
+    from snownlp import SnowNLP
     counter = count_new_strings()
     p = predictor()
     limit = 2000
     for word, count in counter.most_common():
         if not p(word):
-            l = u"%-10s (%d)" % (word, count)
+            sn = SnowNLP(word)
+            l = u"%-10s (%d) (%f)" % (word, count, sn.sentiments - 0.5)
             print l.encode('utf8')
             limit -= 1
             if limit <= 0: return

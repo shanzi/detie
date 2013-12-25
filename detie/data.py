@@ -6,6 +6,8 @@ import os
 import cPickle
 from lxml import etree 
 from itertools import islice
+import re
+DOCID_RE = re.compile(ur'^<doc\d+>')
 
 class BaseData(object):
     """A base data class to define a protocol for iterate all the data records/entries"""
@@ -107,6 +109,17 @@ class DictData(BaseData):
         str_ = u'\n'.join(list_)
         with open(self.absolute_file_path, 'w') as f:
             f.write(str_.encode('utf8'))
+
+class IdData(DictData):
+    def _texts(self):
+        generator = DictData._texts(self)
+        docid = ''
+        for text in _texts:
+            id_match = DOCID_RE.search(text)
+            if id_match:
+                docid = id_match.group()
+            yield docid, text
+
 
 class SetData(BaseData):
     def __init__(self, *args, **kwargs):
