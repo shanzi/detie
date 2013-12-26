@@ -59,14 +59,12 @@ def count_new_strings():
     return counter
 
 def run():
-    from snownlp import SnowNLP
     counter = count_new_strings()
     p = predictor()
-    limit = 2000
+    limit = 12000
     for word, count in counter.most_common():
         if not p(word):
-            sn = SnowNLP(word)
-            l = u"%-10s (%d) (%f)" % (word, count, sn.sentiments - 0.5)
+            l = word
             print l.encode('utf8')
             limit -= 1
             if limit <= 0: return
