@@ -7,12 +7,12 @@ from detie.data import DictData, NLPIRXMLData, IdData
 from detie.extract import extract_new_string
 from detie.prob import word_prob
 from detie.bayes import predictor, retrain as retrain_bayes
-from detie.sentiments import sentiment
+from detie.sentiments import sentiment, sentiment_gather
 
 import multiprocessing
 import re
 
-DOCID_RE = re.compile(ur'^<doc\d+>')
+DOCID_RE = re.compile(ur'^<doc\d+>', re.IGNORECASE)
 
 _global = {}
 
@@ -26,8 +26,8 @@ def build_trie():
     return trie
 
 def build_sentiments_trie():
-    set_data = DictData('output.txt')
-    trie = Trie(set_data)
+    data = DictData('output.txt')
+    trie = Trie(data)
     return trie
 
 def load_corpus():
@@ -70,8 +70,10 @@ def sentiments_process(texts):
     trie = _global['s_trie']
     list_ = []
     doc = u''
+    skip = 0
     for text in texts:
-        w, s = sentiment(trie, text)
+        skip += 1
+        w, s = sentiment(trie, text, skip)
         if w:
             match = DOCID_RE.search(text)
             if match: doc = unicode(match.group())
@@ -85,21 +87,42 @@ def sentiments():
     counter_positive = Counter()
     counter_negtive = Counter()
     counter_neutral = Counter()
-    doc = {}
+    doc_record = {}
     cpu_count = multiprocessing.cpu_count()
     pool = multiprocessing.Pool(processes=cpu_count)
     corpus = load_corpus()
-    sentiment_pair_groups = pool.map(sentiments_process, corpus.texts, COUNT_STEP)
-    for sentiment_pairs in sentiment_pair_groups:
-        for doc, words, sentiment_value in sentiment_pairs:
-            print doc, words, sentiment_value
-            if not doc: continue
-            if sentiment_value > 0.25:
-                for w in words: counter_positive[w]+=1
-            elif sentiment_value < -0.25:
-                for w in words: counter_negtive[w]+=1
-            else:
-                for w in words: counter_neutral[w]+=1
+    groups = corpus.block_groups(cpu_count, COUNT_STEP)
+    import time
+    t1 = time.time()
+    for group in groups:
+        sentiment_pair_groups = pool.map(sentiments_process, group)
+        for sentiment_pairs in sentiment_pair_groups:
+            for doc, words, sentiment_value in sentiment_pairs:
+                if not doc: continue
+                elif sentiment_value == -2:
+                    for w in words:
+                        if not doc_record.get(w): doc_record[w] = doc
+                else:
+                    for w in words:
+                        if not doc_record.get(w): doc_record[w] = doc
+                        if sentiment_value > 0.25:
+                            counter_positive[w]+=1
+                        elif sentiment_value < -0.25:
+                            counter_negtive[w]+=1
+                        else:
+                            counter_neutral[w]+=1
+
+    for word in sentiment_trie.keys():
+        doc_str = doc_record.get(word)
+        if doc_str:
+            doc_no = doc_str[1:-1]
+        else:
+            continue
+        pos = counter_positive[w]
+        neu = counter_neutral[w]
+        neg = counter_negtive[w]
+        print "2.3 %s %s %s" % (doc_no, word, sentiment_gather(word, pos, neu, neg))
+    print time.time() - t1
 
 def run():
     counter = count_new_strings()
