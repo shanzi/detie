@@ -102,7 +102,7 @@ class DictData(BaseData):
                 line = f.readline()
                 if line:
                     l = self._decode(line).strip()
-                    if len(l)==1: continue
+                    if len(l)<=1: continue
                     else:
                         yield l
                 else: break
@@ -114,13 +114,20 @@ class DictData(BaseData):
 
 class PairData(DictData):
     def _texts(self):
-        generator = DictData._texts(self)
-        docid = ''
-        for text in _texts:
-            word, label = text.split()
-            if label=='1': yield word, 1
-            elif lable=='2': yield word, -1
-            else: yield word, 0
+        with open(self.absolute_file_path) as f:
+            while True:
+                line = f.readline()
+                if line:
+                    l = self._decode(line).strip()
+                    if len(l)<=1: continue
+                    else:
+                        word, label = l.split()
+                        features = {char:True for char in word}
+                        if label=='1': yield features, 1
+                        elif label=='2': yield features, -1
+                        else: yield features, 0
+                else: 
+                    break
 
 class SetData(BaseData):
     def __init__(self, *args, **kwargs):

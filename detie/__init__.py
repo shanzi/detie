@@ -3,11 +3,11 @@ from collections import Counter
 from marisa_trie import Trie
 
 from detie.utils import logger
-from detie.data import DictData, NLPIRXMLData, IdData
+from detie.data import DictData, NLPIRXMLData
 from detie.extract import extract_new_string
 from detie.prob import word_prob
 from detie.bayes import predictor, retrain as retrain_bayes
-from detie.sentiments import sentiment, sentiment_gather
+from detie.sentiments import sentiment_classifier
 
 import multiprocessing
 import re
@@ -63,9 +63,11 @@ def count_new_strings():
 
 def sentiments():
     data = DictData('output.txt')
-    for text in data:
-        sentiment(text)
-        print "2.3 %s %s %s" % (doc_no, word, sentiment_gather(word, pos, neu, neg))
+    classify = sentiment_classifier()
+    for word in data:
+        c = classify(word)
+        l =  u"2.3 %s %s" % (word, c)
+        print l.encode('utf8')
 
 def run():
     counter = count_new_strings()
