@@ -27,10 +27,6 @@ def fullcut(text):
     if not text or len_<2: return list_
     if len_<=5:
         list_.append(text)
-    elif len==6:
-        for j in [3, 4]:
-            for i in range(len_-j+1):
-                list_.append(text[i:i+j])
     return list_
 
 def get_new_string(trie, text):
