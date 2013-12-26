@@ -1,27 +1,34 @@
 from snownlp import SnowNLP
-from marisa_trie import Trie
+from nltk.classify import NaiveBayesClassifier
+from detie.data import PairData
 
-def sentiment(keywords_trie, text, skip):
-    words = set()
-    for i in range(len(text)):
-        prefixes = keywords_trie.prefixes(text[i:])
-        for prefix in prefixes:
-            words.add(prefix)
-    if len(words):
-        if skip%10 == 0:
-            nlp = SnowNLP(text)
-            return (words, nlp.sentiments - 0.5)
-        else:
-            return (words, -2)
-    else: return None, 0
 
-def sentiment_gather(word, pos, neutral, neg):
-    nlp = SnowNLP(word)
-    senti = nlp.sentiments - 0.5
-    all_count = pos + neutral + neg
-    senti_count = all_count if all_count > 100 else 50
-    rs =  (senti_count * senti + 0.5 * pos + neg * -0.5)/(all_count + senti_count)
-    if rs > 0.3:return 1
-    if rs < -0.3:return -1
-    else: return 0
+def features(words):
+    return {char: True for char in words}
+
+def train_sentiments_classifier():
+    pairs = PairData('sentiment.txt')
+    model = NaiveBayesClassifier.train(pairs)
+    data = PickleData('sentiments.pickle')
+    data.write(model)
+    return model
+
+def sentiment_classifier():
+    data = PickleData('bayesmodel.pickle')
+    if data.exists:
+        model = data.read()
+    else:
+        model = train_sentiments_classifier()
+
+    def classify(word):
+        nlp = SnowNLP(word)
+        senti = nlp.sentiments - 0.5
+        prob = model.prob_classify(features(word))
+        prob_senti = prob.prob(-1) * - 0.5 + prob.prob(1) * 0.5
+        return senti + prob_senti
+
+    return classify
+
+
+
 

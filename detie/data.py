@@ -112,16 +112,15 @@ class DictData(BaseData):
         with open(self.absolute_file_path, 'w') as f:
             f.write(str_.encode('utf8'))
 
-class IdData(DictData):
+class PairData(DictData):
     def _texts(self):
         generator = DictData._texts(self)
         docid = ''
         for text in _texts:
-            id_match = DOCID_RE.search(text)
-            if id_match:
-                docid = id_match.group()
-            yield docid, text
-
+            word, label = text.split()
+            if label=='1': yield word, 1
+            elif lable=='2': yield word, -1
+            else: yield word, 0
 
 class SetData(BaseData):
     def __init__(self, *args, **kwargs):
