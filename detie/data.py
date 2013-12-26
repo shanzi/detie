@@ -7,7 +7,6 @@ import cPickle
 from lxml import etree 
 from itertools import islice
 import re
-from snownlp import SnowNLP
 
 DOCID_RE = re.compile(ur'^<doc\d+>')
 
@@ -105,8 +104,7 @@ class DictData(BaseData):
                     l = self._decode(line).strip()
                     if len(l)==1: continue
                     else:
-                        nlp = SnowNLP(l)
-                        yield nlp.han
+                        yield l
                 else: break
 
     def write(self, list_):

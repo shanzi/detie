@@ -70,3 +70,8 @@ def deploy():
 @task(default=True)
 def build():
     detie.run()
+
+@task
+def build_sentiments():
+    from detie import sentiments
+    sentiments()
