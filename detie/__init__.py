@@ -66,13 +66,13 @@ def sentiments():
     classify = sentiment_classifier()
     for word in data:
         c = classify(word)
-        l =  u"2.3 %s %s" % (word, c)
+        l =  u"%s %s" % (word, c)
         print l.encode('utf8')
 
 def run():
     counter = count_new_strings()
     p = predictor()
-    limit = 12000
+    limit = 10000
     for word, count in counter.most_common():
         if not p(word):
             l = word
