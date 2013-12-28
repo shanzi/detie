@@ -121,7 +121,10 @@ class PairData(DictData):
                     l = self._decode(line).strip()
                     if len(l)<=1: continue
                     else:
-                        word, label = l.split()
+                        try:
+                            word, label = l.split()
+                        except:
+                            import pdb; pdb.set_trace()
                         features = {char:True for char in word}
                         if label=='1': yield features, 1
                         elif label=='2': yield features, -1

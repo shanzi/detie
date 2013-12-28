@@ -3,7 +3,7 @@ from collections import Counter
 from marisa_trie import Trie
 
 from detie.utils import logger
-from detie.data import DictData, NLPIRXMLData
+from detie.data import DictData, NLPIRXMLData, SetData
 from detie.extract import extract_new_string
 from detie.prob import word_prob
 from detie.bayes import predictor, retrain as retrain_bayes
@@ -61,21 +61,62 @@ def count_new_strings():
     logger.info("Computing finished")
     return counter
 
-def sentiments():
+def sentiments(doc_pair):
     data = DictData('output.txt')
     classify = sentiment_classifier()
     for word in data:
+        doc = doc_pair.get(word)
+        if not doc:continue
+        doc = doc[1:-1]
         c = classify(word)
-        l =  u"%s %s" % (word, c)
+        l =  u"2.3 %s %s %s" % (doc, word, c)
         print l.encode('utf8')
+        
+def doc_extract(texts):
+    map_ = {}
+    trie = _global['trie']
+    words_set = _global['words_set']
+    for text in texts:
+        doc = DOCID_RE.search(text)
+        if not doc:continue
+        words = extract_new_string(trie, text)
+        for word in words:
+            if (not map_.get(word)) and word in words_set:
+                map_[word]=doc.group()
+    return map_
+
+def find_doc():
+    _global['trie'] = build_trie()
+    _global['words_set'] = SetData('output.txt')
+    map_ = {}
+    corpus = load_corpus()
+    cpu_count = multiprocessing.cpu_count()
+    pool = multiprocessing.Pool(processes=cpu_count)
+    groups = corpus.block_groups(cpu_count, COUNT_STEP)
+    i=0
+    sum_ = float(9999000)/COUNT_STEP
+    for group in groups:
+        new_string_groups = pool.map(doc_extract, group)
+        for new_strings in new_string_groups:
+            for word, doc in new_strings.iteritems():
+                if not map_.get(word):
+                    map_[word]=doc
+        i+=cpu_count
+        logger.info("Computing: %.2f%%" % (i/sum_*100))
+    return map_
+
 
 def run():
-    counter = count_new_strings()
-    p = predictor()
-    limit = 11000
-    for word, count in counter.most_common():
-        if not p(word):
-            l = word
-            print l.encode('utf8')
-            limit -= 1
-            if limit <= 0: return
+    map_ = find_doc()
+    sentiments(map_)
+
+# def run():
+#     counter = count_new_strings()
+#     p = predictor()
+#     limit = 11000
+#     for word, count in counter.most_common():
+#         if not p(word):
+#             l = word
+#             print l.encode('utf8')
+#             limit -= 1
+#             if limit <= 0: return

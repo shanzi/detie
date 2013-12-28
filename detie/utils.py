@@ -26,5 +26,5 @@ logging_handler.setLevel(logging.INFO)
 logging_handler.setFormatter(ColorLoggingFormatter('%(levelname)s: %(message)s'))
 
 logger = logging.getLogger('detie')
-logger.setLevel(logging.CRITICAL)
+logger.setLevel(logging.DEBUG)
 logger.addHandler(logging_handler)

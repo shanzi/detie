@@ -6,7 +6,7 @@ def features(words):
     return {char: True for char in words}
 
 def train_sentiments_classifier():
-    pairs = PairData('sentiments.txt', 'gbk')
+    pairs = PairData('sentiments.txt', 'utf8')
     model = NaiveBayesClassifier.train(pairs)
     data = PickleData('sentiments.pickle')
     data.write(model)
