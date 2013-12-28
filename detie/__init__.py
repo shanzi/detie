@@ -72,7 +72,7 @@ def sentiments():
 def run():
     counter = count_new_strings()
     p = predictor()
-    limit = 10000
+    limit = 11000
     for word, count in counter.most_common():
         if not p(word):
             l = word
