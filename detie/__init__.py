@@ -113,14 +113,9 @@ def find_doc():
 def run():
     counter = count_new_strings()
     p = predictor()
-    limit = 2000
-    from snownlp import SnowNLP
-    from detie.sentiments import estimate_neu
+    limit = 15000
     for word, count in counter.most_common():
         if not p(word):
-            nlp = SnowNLP(word)
-            neu = estimate_neu(nlp.tags)
-            l = "%s   %s" % (word, neu)
-            print l.encode('utf8')
-            limit -= 1
-            if limit <= 0: return
+            print word.encode('utf8')
+            limit -=1
+            if limit < 0: return

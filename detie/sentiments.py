@@ -1,6 +1,8 @@
 from nltk.classify import NaiveBayesClassifier
 from detie.data import PairData, PickleData
+import re
 
+RE_TAG = re.compile('[vade]|l\]ns', re.IGNORECASE)
 
 def features(words):
     return {char: True for char in words}
@@ -15,12 +17,9 @@ def train_sentiments_classifier():
 def estimate_neu(tags):
     sum_ = 0
     for w, t in tags:
-        if t.endswith('n'): sum_+=1
-
-    if tags[-1][-1].endswith('n'):
-        return float(sum_)/len(tags) * 1.5
-    else:
-        return float(sum_)/len(tags)
+        if RE_TAG.search(t):
+            sum_+=1
+    return float(sum_)/len(tags)
 
 def sentiment_classifier():
     data = PickleData('sentiments.pickle')
