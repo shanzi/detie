@@ -13,10 +13,14 @@ def train_sentiments_classifier():
     return model
 
 def estimate_neu(tags):
-    sum = 0
+    sum_ = 0
     for w, t in tags:
-        if 'n' in t: sum+=1
-    return float(sum)/len(tags)
+        if t.endswith('n'): sum_+=1
+
+    if tags[-1][-1].endswith('n'):
+        return float(sum_)/len(tags) * 1.5
+    else:
+        return float(sum_)/len(tags)
 
 def sentiment_classifier():
     data = PickleData('sentiments.pickle')

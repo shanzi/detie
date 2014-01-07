@@ -106,17 +106,21 @@ def find_doc():
     return map_
 
 
-def run():
-    map_ = find_doc()
-    sentiments(map_)
+#def run():
+#    map_ = find_doc()
+#    sentiments(map_)
 
-# def run():
-#     counter = count_new_strings()
-#     p = predictor()
-#     limit = 11000
-#     for word, count in counter.most_common():
-#         if not p(word):
-#             l = word
-#             print l.encode('utf8')
-#             limit -= 1
-#             if limit <= 0: return
+def run():
+    counter = count_new_strings()
+    p = predictor()
+    limit = 2000
+    from snownlp import SnowNLP
+    from detie.sentiments import estimate_neu
+    for word, count in counter.most_common():
+        if not p(word):
+            nlp = SnowNLP(word)
+            neu = estimate_neu(nlp.tags)
+            l = "%s   %s" % (word, neu)
+            print l.encode('utf8')
+            limit -= 1
+            if limit <= 0: return
